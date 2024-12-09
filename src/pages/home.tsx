@@ -5,12 +5,14 @@ import useAppDispatch from "../hooks/useAppDispatch";
 import { useUserStates } from "../hooks/useUser";
 
 export default function Home() {
-  const { loading, users, error } = useUserStates();
   const dispatch = useAppDispatch();
+  const { loading, users, error } = useUserStates();
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  },[dispatch])
+    if (!loading && users.length === 0) {
+      dispatch(fetchUsers());
+    }
+  },[dispatch, users.length, loading])
 
   console.log(users)
 

@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import Home from "./pages/home";
 import User from "./pages/user";
+import UserAlbums from "./pages/user-albums";
+import Album from "./pages/album";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +21,15 @@ const router = createBrowserRouter([
       },
       {
         path: "user/:id",
-        element: <User />
+        element: <User />,
+      },
+      {
+        path:"album/:id",
+        element: <Album />
+      },
+      {
+        path:"user/:id/albums",
+        element: <UserAlbums />
       }
     ],
   },

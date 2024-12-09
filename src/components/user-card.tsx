@@ -16,10 +16,10 @@ export default function UserCard({userId}:UserCardProps) {
   return (
     <div className="bg-red-600 m-8 p-4 flex flex-col items-center justify-center
      rounded-xl hover:bg-red-700 cursor-pointer select-none shadow-xl" onClick={handleClick}>
-      <h2 className="flex gap-1 font-medium text-white">
-        {user?.name} <p>({userId})</p>
+      <h2 className="flex gap-1 flex-wrap font-medium text-white">
+        {user?.name}
       </h2>
-      <p className="text-gray-200">{user?.email}</p>
+      <p className="text-gray-200">({user?.username})</p>
     </div>
   );
 }

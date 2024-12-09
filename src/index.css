@@ -2,10 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body, #app{
     display: flex;
+    align-items: center;
     flex: 1;
     width: 100%;
     min-height: 100vh;
     flex-direction: column;
+}
+
+*{
+    font-family: "Parkinsans", sans-serif;
+    font-optical-sizing: auto;
 }
