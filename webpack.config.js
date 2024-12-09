@@ -2,6 +2,9 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 module.exports = {
   devtool: "source-map",
+  devServer: {
+    historyApiFallback: true
+  },
   entry: "./src/main.tsx",
   output: {
     path: __dirname + "/dist",
