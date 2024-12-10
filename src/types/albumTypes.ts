@@ -8,11 +8,14 @@ export interface Album {
     loading: boolean;
     albums: Album[];
     error: string | null;
+    search: string
   }
   
 export const FETCH_ALBUMS_REQUEST = 'FETCH_ALBUMS_REQUEST';
 export const FETCH_ALBUMS_SUCCESS = 'FETCH_ALBUMS_SUCCESS';
 export const FETCH_ALBUMS_FAILURE = 'FETCH_ALBUMS_FAILURE';
+export const SEARCH_ALBUMS_NAME = 'SEARCH_ALBUMS_NAME';
+
 
 interface FetchAlbumsRequestAction {
   type: typeof FETCH_ALBUMS_REQUEST;
@@ -28,8 +31,15 @@ interface FetchAlbumsFailureAction {
   payload: string;
 }
 
+interface SearchAlbumsNameAction {
+  type: typeof SEARCH_ALBUMS_NAME;
+  payload: string;
+}
+
+
 export type AlbumActionTypes =
   | FetchAlbumsRequestAction
   | FetchAlbumsSuccessAction
-  | FetchAlbumsFailureAction;
+  | FetchAlbumsFailureAction
+  | SearchAlbumsNameAction;
 

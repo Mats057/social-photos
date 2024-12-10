@@ -21,3 +21,16 @@ body, #app{
     font-family: "Parkinsans", sans-serif;
     font-optical-sizing: auto;
 }
+
+body::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  body::-webkit-scrollbar-track {
+    background: white;
+  }
+  
+  body::-webkit-scrollbar-thumb {
+    background-color: #DC2626;
+    border-radius: 20px;
+  }

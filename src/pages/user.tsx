@@ -1,20 +1,36 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useUserById } from "../hooks/useUser";
-import { useAlbumByUserId } from "../hooks/useAlbum";
+import { useAlbumByUserId, useAlbumStates } from "../hooks/useAlbum";
 import AlbumCard from "../components/album-card";
 import { Link } from "react-router-dom";
+import useAppDispatch from "../hooks/useAppDispatch";
+import { fetchAlbums } from "../actions/albumActions";
+import { fetchUsers } from "../actions/userActions";
 
 export default function User() {
   const { id } = useParams();
+  const { loading, error } = useAlbumStates();
   const userId = id ? parseInt(id) : undefined;
   const user = useUserById(userId);
   const userAlbums = useAlbumByUserId(userId);
+  const dispatch = useAppDispatch();
   useEffect(() => {
+    if(!loading && !user){
+      dispatch(fetchUsers())
+    }
+    if(!loading && userAlbums?.length === 0){
+      dispatch(fetchAlbums())
+    }
     if (id && user) {
       console.log("Usuário carregado:", user);
     }
-  }, [id, user]);
+
+  }, [id, user, dispatch, userAlbums, loading]);
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro: {error}</p>;
+
   return (
     <main className="flex flex-col flex-grow items-center justify-center px-12 xl:w-2/3 py-12">
       <h1 className="text-3xl font-semibold">{user?.name}</h1>

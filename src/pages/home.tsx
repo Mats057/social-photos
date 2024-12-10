@@ -12,7 +12,7 @@ export default function Home() {
     if (!loading && users.length === 0) {
       dispatch(fetchUsers());
     }
-  },[dispatch, users.length, loading])
+  },[dispatch, users, loading])
 
   console.log(users)
 
