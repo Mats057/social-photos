@@ -14,7 +14,7 @@ export default function AlbumCard({albumId}:AlbumCardProps){
 
     const album = useAlbumById(albumId)
     return(
-        <div className="bg-gray-200 rounded-lg p-2 hover:bg-gray-100 cursor-pointer" onClick={handleClick}>
+        <div className="bg-gray-200 rounded-lg p-2 hover:bg-gray-100 cursor-pointer min-w-full" onClick={handleClick}>
             <p className="text-black font-normal">{album?.id && album.id+1}. {album?.title}</p>
         </div>
     )
