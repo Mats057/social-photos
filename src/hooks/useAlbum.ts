@@ -1,44 +1,34 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/root-reducer";
-import { Album, AlbumState } from "../types/albumTypes";
-import { useUserById } from "./useUser";
+// import { useAppSelector } from "../redux/hooks";
+// import { Album } from "../types/albumTypes";
+// import { useUserById } from "./useUser";
 
-export const useAlbumState = <T extends keyof RootState["albumReducer"]>(
-  key: T
-): AlbumState[T] => {
-  return useSelector((rootState: RootState) => rootState.albumReducer[key]);
-};
 
-export const useAlbumStates = (): AlbumState => {
-  return useSelector((state: RootState) => state.albumReducer);
-};
-
-export const useAlbumById = (id: number | undefined): Album | null => {
-    const albums = useAlbumState("albums");
-    if (id === undefined) {
-      return null;
-    }
-    const album = albums.find((user) => user.id === id);
-    return album || null;
-  };
+// export const useAlbumById = (id: number | undefined): Album | null => {
+//     const { albums } = useAppSelector(state => state.albumReducer);
+//     if (id === undefined) {
+//       return null;
+//     }
+//     const album = albums.find((user) => user.id === id);
+//     return album || null;
+//   };
   
 
-export const useAlbumByUserId = (userId: number | undefined): Album[] | null => {
-  const albums = useAlbumState("albums");
-  const user = useUserById(userId);
-  if (user === undefined) {
-    return null;
-  }
-  const userAlbums = albums.filter(album => album.userId == userId)
-  return userAlbums || null;
-};
+// export const useAlbumByUserId = (userId: number | undefined): Album[] | null => {
+//   const albums = useAlbumState("albums");
+//   const user = useUserById(userId);
+//   if (user === undefined) {
+//     return null;
+//   }
+//   const userAlbums = albums.filter(album => album.userId == userId)
+//   return userAlbums || null;
+// };
 
-export const useFilterAlbumByName = (userId: number | undefined): Album[] | null => {
-  const albums = useAlbumByUserId(userId);
-  const search = useAlbumState("search");
+// export const useFilterAlbumByName = (userId: number | undefined): Album[] | null => {
+//   const albums = useAlbumByUserId(userId);
+//   const search = useAlbumState("search");
 
-  if (!albums) return null;
-  return albums.filter(album => 
-    album.title.toLowerCase().includes(search.toLowerCase())
-  );
-};
+//   if (!albums) return null;
+//   return albums.filter(album => 
+//     album.title.toLowerCase().includes(search.toLowerCase())
+//   );
+// };

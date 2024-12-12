@@ -1,18 +1,15 @@
 import { useEffect } from "react";
 import UserCard from "../components/user-card";
-import { fetchUsers } from "../actions/userActions";
-import useAppDispatch from "../hooks/useAppDispatch";
-import { useUserStates } from "../hooks/useUser";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { fetchUsers } from "../redux/user/userListSlice";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const { loading, users, error } = useUserStates();
+  const { loading, users, error } = useAppSelector(state => state.userListReducer);
 
   useEffect(() => {
-    if (!loading && users.length === 0) {
-      dispatch(fetchUsers());
-    }
-  },[dispatch, users, loading])
+    dispatch(fetchUsers());
+  },[dispatch])
 
   console.log(users)
 
@@ -22,7 +19,7 @@ export default function Home() {
   return (
     <main className="grid grid-cols-3 xl:grid-cols-4 grow">
       {users.map((user) => (
-        <UserCard key={user.id} userId={user.id}/>
+        <UserCard key={user.id} user={user}/>
       ))}
     </main>
   );

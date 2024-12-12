@@ -1,29 +1,38 @@
 import { useParams } from "react-router-dom";
-import { useAlbumStates, useFilterAlbumByName } from "../hooks/useAlbum";
 import AlbumCard from "../components/album-card";
-import { IoSearch } from "react-icons/io5";
-import { SEARCH_ALBUMS_NAME } from "../types/albumTypes";
-import { ChangeEvent, useEffect } from "react";
-import { fetchAlbums } from "../actions/albumActions";
-import useAppDispatch from "../hooks/useAppDispatch";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  fetchAlbumsByUserId,
+  filterAlbumBySearch,
+} from "../redux/album/userAlbumsSlice";
 
 export default function UserAlbums() {
-  const { loading, error, search } = useAlbumStates();
+  const { loading, error, filteredAlbums } = useAppSelector(
+    (state) => state.albumsByUserReducer
+  );
   const { id } = useParams();
   const userId = id ? parseInt(id) : undefined;
-  const userAlbums = useFilterAlbumByName(userId);
   const dispatch = useAppDispatch();
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: SEARCH_ALBUMS_NAME, payload: e.target.value });
+  const search = useRef<HTMLInputElement | null>(null);
+  const handleSearch = () => {
+    if (search.current) {
+      dispatch(filterAlbumBySearch(search.current.value));
+    }
+  };
+  const handleClear = () => {
+    if (search.current) {
+      search.current.value = "";
+      handleSearch();
+    }
   };
 
   useEffect(() => {
-    if(!loading && userAlbums?.length === 0 && search == ''){
-      dispatch(fetchAlbums())
-    }
-  },[dispatch, userAlbums, loading, search])
+    dispatch(fetchAlbumsByUserId(userId));
+  }, [dispatch, userId]);
 
-  console.log(userAlbums)
+  console.log(filteredAlbums);
 
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>Erro: {error}</p>;
@@ -34,15 +43,18 @@ export default function UserAlbums() {
         <div className="border rounded-md flex items-center">
           <input
             type="text"
-            value={search}
+            ref={search}
             className="p-2 rounded-md w-full text-sm"
-            onChange={(e) => handleSearch(e)}
+            onChange={handleSearch}
           />
-          <IoSearch className="text-gray-300 size-6 mx-1" />
+          <FaRegTrashAlt
+            className="text-gray-300 size-6 mx-1"
+            onClick={handleClear}
+          />
         </div>
-        {userAlbums && userAlbums.length > 0 ? (
-          userAlbums.map((album) => (
-            <AlbumCard albumId={album.id} key={album.id} />
+        {filteredAlbums && filteredAlbums.length > 0 ? (
+          filteredAlbums.map((album) => (
+            <AlbumCard album={album} key={album.id} />
           ))
         ) : (
           <p>No albums found</p>

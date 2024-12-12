@@ -1,29 +1,34 @@
 import { useParams } from "react-router-dom";
-import { useFilterPhotoByTitle, usePhotoStates } from "../hooks/usePhoto";
 import PhotoCard from "../components/photo-card";
-import { IoSearch } from "react-icons/io5";
-import { SEARCH_PHOTOS_NAME } from "../types/photoTypes";
-import { ChangeEvent, useEffect } from "react";
-import useAppDispatch from "../hooks/useAppDispatch";
-import { fetchPhotos } from "../actions/photoActions";
+import { useEffect, useRef } from "react";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { fetchPhotosByAlbumId, filterPhotoBySearch } from "../redux/photo/albumPhotosSlice";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 export default function Album() {
   const { id } = useParams();
-  const { loading, error, search } = usePhotoStates();
+  const { loading, error } = useAppSelector((state) => state.albumReducer);
   const dispatch = useAppDispatch();
   const albumId = id ? parseInt(id) : undefined;
-  const photos = useFilterPhotoByTitle(albumId);
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: SEARCH_PHOTOS_NAME, payload: e.target.value });
+  const { filteredPhotos } = useAppSelector((state) => state.photoReducer);
+  const searchPhoto = useRef<HTMLInputElement | null>(null);
+  const handleSearch = () => {
+    if (searchPhoto.current) {
+      dispatch(filterPhotoBySearch(searchPhoto.current.value));
+    }
+  };
+  const handleClear = () => {
+    if (searchPhoto.current) {
+      searchPhoto.current.value = "";
+      handleSearch();
+    }
   };
 
   useEffect(() => {
-    if(!loading && photos?.length === 0 && search == ''){
-      dispatch(fetchPhotos())
-    }
-  },[dispatch, photos, loading, search])
+    dispatch(fetchPhotosByAlbumId(albumId));
+  }, [dispatch, albumId]);
 
-  console.log(photos)
+  console.log(filteredPhotos);
 
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>Erro: {error}</p>;
@@ -35,16 +40,19 @@ export default function Album() {
         <div className="border rounded-md flex items-center">
           <input
             type="text"
-            value={search}
+            ref={searchPhoto}
             className="p-2 rounded-md w-full text-sm"
-            onChange={(e) => handleSearch(e)}
+            onChange={handleSearch}
           />
-          <IoSearch className="text-gray-300 size-6 mx-1" />
+          <FaRegTrashAlt
+            className="text-gray-300 size-6 mx-1"
+            onClick={handleClear}
+          />
         </div>
       </div>
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {photos && photos.length > 0 ? (
-          photos.map((photo) => <PhotoCard key={photo.id} photoId={photo.id} />)
+        {filteredPhotos && filteredPhotos.length > 0 ? (
+          filteredPhotos.map((photo) => <PhotoCard key={photo.id} photo={photo} />)
         ) : (
           <p>No photos available</p>
         )}

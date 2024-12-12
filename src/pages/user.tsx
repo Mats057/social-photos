@@ -1,32 +1,21 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useUserById } from "../hooks/useUser";
-import { useAlbumByUserId, useAlbumStates } from "../hooks/useAlbum";
 import AlbumCard from "../components/album-card";
 import { Link } from "react-router-dom";
-import useAppDispatch from "../hooks/useAppDispatch";
-import { fetchAlbums } from "../actions/albumActions";
-import { fetchUsers } from "../actions/userActions";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { fetchAlbumsByUserId } from "../redux/album/userAlbumsSlice";
+import { fetchUserById } from "../redux/user/userSlice";
 
 export default function User() {
   const { id } = useParams();
-  const { loading, error } = useAlbumStates();
   const userId = id ? parseInt(id) : undefined;
-  const user = useUserById(userId);
-  const userAlbums = useAlbumByUserId(userId);
+  const { loading, error, albums } = useAppSelector(state => state.albumsByUserReducer);
+  const { user } = useAppSelector(state => state.userReducer)
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if(!loading && !user){
-      dispatch(fetchUsers())
-    }
-    if(!loading && userAlbums?.length === 0){
-      dispatch(fetchAlbums())
-    }
-    if (id && user) {
-      console.log("Usuário carregado:", user);
-    }
-
-  }, [id, user, dispatch, userAlbums, loading]);
+    dispatch(fetchUserById(userId));
+    dispatch(fetchAlbumsByUserId(userId));
+  }, [dispatch, userId]);
 
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>Erro: {error}</p>;
@@ -149,14 +138,16 @@ export default function User() {
             <Link to={`albums`}>Ver todos</Link>
           </div>
           <div className="flex flex-col gap-2 pt-2">
-            {userAlbums?.length ? (
-              userAlbums
+            {albums?.length ? (
+              albums
                 .slice(0, 4)
-                .map((album) => <AlbumCard key={album.id} albumId={album.id} />)
+                .map((album) => <AlbumCard key={album.id} album={album} />)
             ) : (
               <p>No album found</p>
             )}
-            <Link to={`albums`} className="text-2xl -mt-4 self-center">...</Link>
+            <Link to={`albums`} className="text-2xl -mt-4 self-center">
+              ...
+            </Link>
           </div>
         </div>
       </section>

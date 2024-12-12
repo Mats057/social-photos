@@ -1,18 +1,17 @@
 import { useNavigate } from "react-router-dom"
-import { useAlbumById } from "../hooks/useAlbum"
+import { Album } from "../types/albumTypes";
 
 type AlbumCardProps = {
-    albumId: number
+    album: Album
   }
   
 
-export default function AlbumCard({albumId}:AlbumCardProps){
+export default function AlbumCard({album}:AlbumCardProps){
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate(`/album/${albumId}`)
+        navigate(`/album/${album.id}`)
     }
 
-    const album = useAlbumById(albumId)
     return(
         <div className="bg-gray-200 rounded-lg p-2 hover:bg-gray-100 cursor-pointer min-w-full" onClick={handleClick}>
             <p className="text-black font-normal">{album?.id && album.id+1}. {album?.title}</p>

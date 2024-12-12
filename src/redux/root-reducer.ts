@@ -1,8 +1,19 @@
 import { combineReducers } from "redux";
-import userReducer from "./user/userReducer";
-import albumReducer from "./album/albumReducer";
-import photoReducer from "./photo/photoReducer";
+
+import photoReducer from "./photo/albumPhotosSlice";
+import albumReducer from "./album/albumSlice";
+import albumListReducer from "./album/albumSlice";
+import userReducer from "./user/userSlice";
+import albumsByUserReducer from "./album/userAlbumsSlice";
+import userListReducer from "./user/userListSlice";
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-export const rootReducer = combineReducers({ userReducer, albumReducer, photoReducer });
+export const rootReducer = combineReducers({
+  userReducer,
+  userListReducer,
+  albumReducer,
+  albumListReducer,
+  albumsByUserReducer,
+  photoReducer,
+});

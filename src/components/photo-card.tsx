@@ -1,11 +1,10 @@
-import { usePhotoById } from "../hooks/usePhoto"
+import { Photo } from "../types/photoTypes"
 
 type PhotoCardProps = {
-    photoId: number
+    photo: Photo
   }
 
-export default function PhotoCard({photoId}:PhotoCardProps){
-    const photo = usePhotoById(photoId)
+export default function PhotoCard({photo}:PhotoCardProps){
     return (
         <div className="bg-gray-100 rounded-lg hover:scale-125 transition-all shadow-lg">
             <img src={photo?.url} alt={photo?.title} className="rounded-t-lg" />
