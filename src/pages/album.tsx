@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchPhotosByAlbumId, filterPhotoBySearch } from "../redux/photo/albumPhotosSlice";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { fetchAlbumById } from "../redux/album/albumSlice";
 
 export default function Album() {
   const { id } = useParams();
@@ -11,6 +12,7 @@ export default function Album() {
   const dispatch = useAppDispatch();
   const albumId = id ? parseInt(id) : undefined;
   const { filteredPhotos } = useAppSelector((state) => state.photoReducer);
+  const { album } = useAppSelector((state) => state.albumReducer);
   const searchPhoto = useRef<HTMLInputElement | null>(null);
   const handleSearch = () => {
     if (searchPhoto.current) {
@@ -25,6 +27,7 @@ export default function Album() {
   };
 
   useEffect(() => {
+    dispatch(fetchAlbumById(albumId))
     dispatch(fetchPhotosByAlbumId(albumId));
   }, [dispatch, albumId]);
 
@@ -36,7 +39,7 @@ export default function Album() {
   return (
     <main className="xl:w-2/3 py-6 mb-4">
       <div className="flex justify-between my-4 items-center">
-        <h1 className="text-2xl font-bold">Photos from album {albumId}</h1>
+        <h1 className="text-2xl font-bold">Photos from album {album?.title}</h1>
         <div className="border rounded-md flex items-center">
           <input
             type="text"
